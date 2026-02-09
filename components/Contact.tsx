@@ -1,8 +1,7 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { Alert, Linking, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Contact() {
-  const router = useRouter();
   const params = useLocalSearchParams();
 
   const {name, phone} = params;
