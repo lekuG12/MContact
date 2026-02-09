@@ -8,7 +8,7 @@ export default function Contact() {
   const {id, name, phone} = params;
 
   const handleCall = async() => {
-    const phoneNumber = phone.replace(/[^0-9+]/g, '');
+    const phoneNumber = formatPhoneForCall(phone);
     const url = `tel:${phoneNumber}`;
 
     try {
@@ -19,7 +19,7 @@ export default function Contact() {
         Alert.alert('Error', 'Unable to make phone calls on this device');
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to open phone app');
+      Alert.alert('Error', `Failed to open dialer: ${error.message}`);
       console.error('Call error:', error);
     }
   };
@@ -77,13 +77,6 @@ export default function Contact() {
 
   const handleWhatsApp = async () => {
     let phoneNumber = phone.replace(/[^0-9+]/g, '');
-
-    if (phoneNumber.startsWith('+')) {
-      phoneNumber = phoneNumber.substring(1);
-    }
-    if (phoneNumber.startsWith('00')) {
-      phoneNumber = phoneNumber.substring(2);
-    }
     
     const url = `whatsapp://send?phone=${phoneNumber}`;
 
@@ -160,12 +153,6 @@ export default function Contact() {
         </Pressable>
 
       </View>
-      <Pressable 
-        style={styles.backButton}
-        onPress={() => router.back()}
-      >
-        <Text style={styles.backButtonText}>Back to Contacts</Text>
-      </Pressable>
 
     </View>
   );
@@ -187,7 +174,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#000',
+    backgroundColor: '#000000',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
@@ -221,9 +208,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 }
   },
   callButton: {
     backgroundColor: '#34C759',
@@ -238,9 +223,6 @@ const styles = StyleSheet.create({
   whatsappButton: {
     backgroundColor: '#25D366',
   },
-  emailButton: {
-    backgroundColor: '#FF9500',
-  },
   actionIcon: {
     fontSize: 32,
     marginBottom: 8,
@@ -249,17 +231,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-  },
-  backButton: {
-    marginTop: 'auto',
-    padding: 16,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  backButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
   },
 });
