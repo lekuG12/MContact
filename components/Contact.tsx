@@ -5,7 +5,7 @@ export default function Contact() {
   const router = useRouter();
   const params = useLocalSearchParams();
 
-  const {id, name, phone} = params;
+  const {name, phone} = params;
 
   const handleCall = async() => {
     const phoneNumber = formatPhoneForCall(phone);
@@ -20,7 +20,6 @@ export default function Contact() {
       }
     } catch (error) {
       Alert.alert('Error', `Failed to open dialer: ${error.message}`);
-      console.error('Call error:', error);
     }
   };
 
@@ -37,7 +36,6 @@ export default function Contact() {
       }
     } catch (error) {
       Alert.alert('Error', 'Failed to open messaging app');
-      console.error('SMS error:', error);
     }
   };
 

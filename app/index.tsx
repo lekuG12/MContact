@@ -54,14 +54,12 @@ export default function Index() {
           .select();
       
         if (error) {
-          console.error('Error adding contact:', error);
           alert('Failed to add contact');
         } else {
           setContacts((prevContacts) => [data[0], ...prevContacts]);
         }
       } 
     } catch(error) {
-      console.error('Unexpected error:', error);
       alert('Failed to add contact');
     }
   };
@@ -74,7 +72,6 @@ export default function Index() {
         .eq('id', id);
 
       if (error) {
-        console.error('Error deleting contact:', error);
         alert('Failed to delete contact');
       } else {
         setContacts((prevContacts) => {
@@ -82,7 +79,6 @@ export default function Index() {
         });
       }
     } catch (error) {
-      console.error('Unexpected error:', error);
       alert('Failed to delete contact');
     }
   };
