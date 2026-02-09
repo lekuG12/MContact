@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { supabase } from "../lib/supabase";
 
 export default function Index() {
@@ -100,7 +100,7 @@ export default function Index() {
   }
   
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
 
       <TextInput
         style={styles.input}
@@ -138,7 +138,7 @@ export default function Index() {
       <Pressable style={styles.addButton} onPress={() => router.push("/add")}>
         <Text style={styles.addText}>Add Contact</Text>
       </Pressable>
-    </View>
+    </ScrollView>
   );
 }
 

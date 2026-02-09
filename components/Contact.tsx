@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import { Alert, Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function Contact() {
   const params = useLocalSearchParams();
@@ -106,7 +106,7 @@ export default function Contact() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>
@@ -151,7 +151,7 @@ export default function Contact() {
 
       </View>
 
-    </View>
+    </ScrollView>
   );
 }
 
