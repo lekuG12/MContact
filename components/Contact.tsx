@@ -43,7 +43,7 @@ export default function Contact() {
 
   const handleTelegram = async () => {
     let phoneNumber = phone.replace(/[^0-9+]/g, '');
-    const url = `https://t.me/${phoneNumber}`;
+    const url = `tg://resolve?phone=${phoneNumber}`;
 
     try {
       const canOpen = await Linking.canOpenURL(url);
@@ -229,7 +229,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#34C759',
   },
   textButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#007bff',
+  },
+
+  telegramButton: {
+    backgroundColor: '#1d91ca',
   },
   whatsappButton: {
     backgroundColor: '#25D366',
