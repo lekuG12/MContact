@@ -1,13 +1,30 @@
 import { useLocalSearchParams } from "expo-router";
-import { Alert, Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Linking,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+
+import styles from "../styles/ConStyles";
+
+function formatPhoneForCall(phone: string) {
+  return phone.replace(/[^0-9+]/g, "");
+}
 
 export default function Contact() {
   const params = useLocalSearchParams();
 
-  const {name, phone} = params;
+  const { name, phone } = params;
 
-  const handleCall = async() => {
-    const phoneNumber = formatPhoneForCall(phone);
+  const nameStr = Array.isArray(name) ? name[0] : name || "unknown";
+  const phoneStr = Array.isArray(phone) ? phone[0] : phone || "unknown";
+
+  const handleCall = async () => {
+    const phoneNumber = formatPhoneForCall(phone as string);
     const url = `tel:${phoneNumber}`;
 
     try {
@@ -15,93 +32,93 @@ export default function Contact() {
       if (canOpen) {
         await Linking.openURL(url);
       } else {
-        Alert.alert('Error', 'Unable to make phone calls on this device');
+        Alert.alert("Error", "Unable to make phone calls on this device");
       }
-    } catch (error) {
-      Alert.alert('Error', `Failed to open dialer: ${error.message}`);
+    } catch (error: any) {
+      Alert.alert("Error", `Failed to open dialer: ${error.message}`);
     }
   };
 
   const handleText = async () => {
-    const phoneNumber = phone.replace(/[^0-9+]/g, '');
+    const phoneNumber = formatPhoneForCall(phone as string);
     const url = `sms:${phoneNumber}`;
-    
+
     try {
       const canOpen = await Linking.canOpenURL(url);
       if (canOpen) {
         await Linking.openURL(url);
       } else {
-        Alert.alert('Error', 'Unable to send messages on this device');
+        Alert.alert("Error", "Unable to send messages on this device");
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to open messaging app');
+      Alert.alert("Error", "Failed to open messaging app");
     }
   };
 
   const handleTelegram = async () => {
-    let phoneNumber = phone.replace(/[^0-9+]/g, '');
+    let phoneNumber = formatPhoneForCall(phone as string);
     const url = `tg://resolve?phone=${phoneNumber}`;
 
     try {
-      const canOpen = await Linking.canOpenURL(url);
-      if (canOpen){
-        await Linking.openURL(url);
-      }
-      else{
-        Alert.alert(
-          'Telegram Not Found',
-          'Telegram is not installed on this device. Would you like to install it?',
-          [
-            { text: 'Cancel', style: 'cancel' },
-            {
-              text: 'Install',
-              onPress: () => {
-                const storeUrl = Platform.OS === 'ios' 
-                  ? 'https://apps.apple.com/app/telegram-messenger/id686449807'
-                  : 'https://play.google.com/store/apps/details?id=org.telegram.messenger';
-                Linking.openURL(storeUrl);
-              }
-            }
-          ]
-        );
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to open Telegram');
-      console.error('Telegram error:', error);
-    }
-  };
-
-
-  const handleWhatsApp = async () => {
-    let phoneNumber = phone.replace(/[^0-9+]/g, '');
-    
-    const url = `whatsapp://send?phone=${phoneNumber}`;
-
-      try {
       const canOpen = await Linking.canOpenURL(url);
       if (canOpen) {
         await Linking.openURL(url);
       } else {
         Alert.alert(
-          'WhatsApp Not Found',
-          'WhatsApp is not installed on this device. Would you like to install it?',
+          "Telegram Not Found",
+          "Telegram is not installed on this device. Would you like to install it?",
           [
-            { text: 'Cancel', style: 'cancel' },
+            { text: "Cancel", style: "cancel" },
             {
-              text: 'Install',
+              text: "Install",
               onPress: () => {
-                const storeUrl = Platform.OS === 'ios' 
-                  ? 'https://apps.apple.com/app/whatsapp-messenger/id310633997'
-                  : 'https://play.google.com/store/apps/details?id=com.whatsapp';
+                const storeUrl =
+                  Platform.OS === "ios"
+                    ? "https://apps.apple.com/app/telegram-messenger/id686449807"
+                    : "https://play.google.com/store/apps/details?id=org.telegram.messenger";
                 Linking.openURL(storeUrl);
-              }
-            }
-          ]
+              },
+            },
+          ],
         );
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to open WhatsApp');
-      console.error('WhatsApp error:', error);
+      Alert.alert("Error", "Failed to open Telegram");
+      console.error("Telegram error:", error);
+    }
+  };
+
+  const handleWhatsApp = async () => {
+    let phoneNumber = formatPhoneForCall(phone as string);
+
+    const url = `whatsapp://send?phone=${phoneNumber}`;
+
+    try {
+      const canOpen = await Linking.canOpenURL(url);
+      if (canOpen) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert(
+          "WhatsApp Not Found",
+          "WhatsApp is not installed on this device. Would you like to install it?",
+          [
+            { text: "Cancel", style: "cancel" },
+            {
+              text: "Install",
+              onPress: () => {
+                const storeUrl =
+                  Platform.OS === "ios"
+                    ? "https://apps.apple.com/app/whatsapp-messenger/id310633997"
+                    : "https://play.google.com/store/apps/details?id=com.whatsapp";
+                Linking.openURL(storeUrl);
+              },
+            },
+          ],
+        );
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to open WhatsApp");
+      console.error("WhatsApp error:", error);
     }
   };
 
@@ -110,14 +127,14 @@ export default function Contact() {
       <View style={styles.header}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>
-            {name.charAt(0).toUpperCase()}
+            {nameStr.charAt(0).toUpperCase()}
           </Text>
         </View>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.phone}>{phone}</Text>
+        <Text style={styles.name}>{nameStr}</Text>
+        <Text style={styles.phone}>{phoneStr}</Text>
       </View>
       <View style={styles.actionsContainer}>
-        <Pressable 
+        <Pressable
           style={[styles.actionButton, styles.callButton]}
           onPress={handleCall}
         >
@@ -125,7 +142,7 @@ export default function Contact() {
           <Text style={styles.actionText}>Call</Text>
         </Pressable>
 
-        <Pressable 
+        <Pressable
           style={[styles.actionButton, styles.textButton]}
           onPress={handleText}
         >
@@ -133,7 +150,7 @@ export default function Contact() {
           <Text style={styles.actionText}>Text</Text>
         </Pressable>
 
-        <Pressable 
+        <Pressable
           style={[styles.actionButton, styles.whatsappButton]}
           onPress={handleWhatsApp}
         >
@@ -141,92 +158,14 @@ export default function Contact() {
           <Text style={styles.actionText}>WhatsApp</Text>
         </Pressable>
 
-        <Pressable 
+        <Pressable
           style={[styles.actionButton, styles.telegramButton]}
           onPress={handleTelegram}
         >
           <Text style={styles.actionIcon}>➢</Text>
           <Text style={styles.actionText}>Telegram</Text>
         </Pressable>
-
       </View>
-
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 20,
-  },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 40,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#000000',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  avatarText: {
-    fontSize: 40,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  name: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  phone: {
-    fontSize: 18,
-    color: '#666',
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    marginTop: 40,
-    gap: 16,
-  },
-  actionButton: {
-    width: '45%',
-    padding: 20,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginBottom: 16,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 }
-  },
-  callButton: {
-    backgroundColor: '#34C759',
-  },
-  textButton: {
-    backgroundColor: '#007bff',
-  },
-
-  telegramButton: {
-    backgroundColor: '#1d91ca',
-  },
-  whatsappButton: {
-    backgroundColor: '#25D366',
-  },
-  actionIcon: {
-    fontSize: 32,
-    marginBottom: 8,
-  },
-  actionText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
